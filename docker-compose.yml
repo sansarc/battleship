@@ -1,0 +1,12 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: battleship-server:latest  
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/app
+    command: >
+      sh -c "make clean && make && ./bin/server"
