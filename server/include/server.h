@@ -33,6 +33,8 @@ typedef struct {
     int opponent_ships_placed;
     int creator_ready;
     int opponent_ready;
+    int creator_rematch;
+    int opponent_rematch;
     int turn;
     pthread_mutex_t lock;
 } Match;
@@ -42,5 +44,7 @@ typedef struct {
     int active_games_count;
     pthread_mutex_t global_lock;
 } GameManager;
+
+extern GameManager game_manager;
 
 #endif
