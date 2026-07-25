@@ -157,7 +157,7 @@ void handle_join_response(const Client *client, const int match_id, const int ac
     pthread_mutex_unlock(&match->lock);
 }
 
-void place_ship(const Client *client, const int match_id, const int x, const int y, const int length, const char orientation) {
+void place_ship(const Client *client, const int match_id, const int x, const int y, const char orientation) {
     if (match_id < 0 || match_id >= MAX_GAMES) {
         char response[128];
         snprintf(response, sizeof(response), "ERR INVALID_MATCH_ID %d\n", match_id);
@@ -205,7 +205,9 @@ void place_ship(const Client *client, const int match_id, const int x, const int
         return;
     }
 
-    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE || length <= 0) {
+    const int length = SHIP_LENGTHS[* ships_placed];
+
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) {
         write(client->socket_fd, "ERR OUT_OF_BOUNDS\n", 18);
         pthread_mutex_unlock(&match->lock);
         return;
@@ -217,7 +219,6 @@ void place_ship(const Client *client, const int match_id, const int x, const int
             pthread_mutex_unlock(&match->lock);
             return;
         }
-
 
         for (int i = 0; i < length; i++) {
             if (grid[x][y + i] != 0) {
@@ -509,9 +510,9 @@ void handle_client_message(Client *client, char *message) {
     }
 
     if (strcmp(command, "PLACE") == 0) {
-        const int parsed_place = sscanf(message, "PLACE %d %d %d %d %c", &args[0], &args[1], &args[2], &args[3], &orientation);
-        if (parsed_place == 5) {
-            place_ship(client, args[0], args[1], args[2], args[3], orientation);
+        const int parsed_place = sscanf(message, "PLACE %d %d %d %c", &args[0], &args[1], &args[2], &orientation);
+        if (parsed_place == 4) {
+            place_ship(client, args[0], args[1], args[2], orientation);
             return;
         }
 

@@ -9,6 +9,8 @@
 #define GRID_SIZE 10
 #define SHIPS_PER_PLAYER 3
 
+static const int SHIP_LENGTHS[SHIPS_PER_PLAYER] = {4, 3, 2};
+
 typedef enum {
     GAME_WAITING,
     GAME_PLACEMENT,
